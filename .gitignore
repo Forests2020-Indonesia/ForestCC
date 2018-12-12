@@ -1,3 +1,5 @@
 PROCESSED_DATA
 .Rproj.user
 *.Rproj
+*.RData
+*.RDataTmp
