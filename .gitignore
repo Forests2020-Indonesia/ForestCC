@@ -3,3 +3,7 @@ PROCESSED_DATA
 *.Rproj
 *.RData
 *.RDataTmp
+*.tif
+*.json
+PYTHON/test.py
+PYTHON/test2.py
