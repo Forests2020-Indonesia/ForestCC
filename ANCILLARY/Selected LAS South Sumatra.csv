@@ -1,0 +1,29 @@
+LASfile,LCdominan,LC2,LC_KLHK _2015,Note
+Line_2_37,hutan mangrove,,,mangrove muda
+Line_2_53,hutan mangrove,,,
+Line_2_54,hutan mangrove,badan air,,
+Line_2_70,belukar rawa,,Savana,atau rumput? lihat komentar pada Line_4_89
+Line_4_101,hutan mangrove,,,
+Line_4_20,hutan rawa,,,
+Line_4_22,belukar rawa,"belukar rawa, kanal, hutan rawa, kanal",,transisi dari belukar rawa ke hutan rawa
+Line_4_26,belukar rawa,hutan rawa,,
+Line_4_35,hutan rawa,,,"Di tile ini, terdapat kelas 'tanah terbuka' yang dibuat KLHK tapi sebenarnya hutan (rawa gambut?)"
+Line_4_49,hutan rawa,,,
+Line_4_51,hutan mangrove,"hutan mangrove, badan air",,"rona berbeda dengan Line_4_56, di klasifikasi BAPLAN disebut sebagai mangrove primer, namun kerapatannya tampak tidak begitu tinggi"
+Line_4_56,hutan rawa,,,(?)(rona berbeda dengan hutan mangrove dekat badan air: Line_4_51)
+Line_4_59,belukar rawa,,belukar rawa,
+Line_4_64,hutan mangrove sekunder,,Belukar rawa,(?)(Pohon lebih rapat dari belukar)
+Line_4_74,hutan mangrove,badan air,Hutan Mangrove Primer,Mangrove dengan (dekat) badan air
+Line_4_86,sawit muda,belukar rawa,,(batas LC yang berbeda jelas)
+Line_4_89,belukar rawa,,,"sepertinya belukar rawa, tapi rona pada Landsat di tile Line_2_70 terlihat sama, dan tipe LC pada data KLHK berbeda antara Line_4_89 dan Line_2_70"
+Line_4_98,komunitas nipah,belukar rawa,,
+Line_4_99,belukar rawa,hutan mangrove,Savana,transisi dari belukar rawa ke mangrove
+Line_5_2,belukar rawa,"belukar rawa, hutan rawa jarang",tanah terbuka,transisi dari belukar rawa ke hutan rawa jarang
+Line_5_9,belukar rawa,"belukar rawa, hutan rawa rapat",belukar rawa,transisi dari belukar rawa ke hutan rawa rapat
+Line_7_2,sawit muda,,,
+Line_7_5,sawit,,,
+Line_8_1,belukar rawa,,,
+Line_8_10,hutan tanaman,,,
+Line_8_11,hutan tanaman,,,
+Line_8_2,hutan rawa jarang,,,
+Line_8_4,hutan tanaman,,,hutan tanaman jarang (muda) sampai rapat

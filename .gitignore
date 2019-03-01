@@ -6,3 +6,4 @@ PROCESSED_DATA
 *.json
 PYTHON/test.py
 PYTHON/test2.py
+.httr-oauth

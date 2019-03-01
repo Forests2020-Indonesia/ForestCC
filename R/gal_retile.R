@@ -18,6 +18,6 @@ opt_chunk_alignment(ctg43208) <- c(397000L, 9772000L) # WAJIB INTEGER !
 opt_output_files(ctg43208) <- "/DATA/LIDAR GAL/L_43208/l_43208_{XLEFT}_{YBOTTOM}"
 opt_filter(ctg43208) <- "-drop_z_above 90"  # based on Google Earth DTM
 
-newctg <-catalog_retile(ctg43208)
+newctg <- catalog_retile(ctg43208)
 
 
