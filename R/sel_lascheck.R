@@ -7,7 +7,7 @@
    # give height plot
 # end
 
-
+d1 <- date()
 options(stringsAsFactors = FALSE)
 options(digits = 22)
 
@@ -53,3 +53,5 @@ chkLas = function(fname)
 }
 
 sapply(listFiles, FUN = chkLas)
+d2 <- date()
+d2 - d1

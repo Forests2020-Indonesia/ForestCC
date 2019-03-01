@@ -4,8 +4,8 @@
 
 library(lidR)
 
-d1 <- date()
-ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS/")
+rm(list=ls())
+ctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS/")
 opt_cores(ctg) <- 4
 opt_chunk_size(ctg) <- 0
 opt_chunk_buffer(ctg) <- 0
@@ -39,5 +39,3 @@ ctgCheck <- function(x)
 }
 
 flgCheck <- catalog_apply(ctg, ctgCheck)
-
-d2 <- date()
