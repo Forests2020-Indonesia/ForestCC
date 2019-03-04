@@ -14,15 +14,14 @@ opt_cores(ctg) <- 1
 opt_filter(ctg) <- "-drop_z_below 0"
 opt_output_files(ctg) <- paste0("PROCESSED_DATA/CTG_OUT/{ORIGINALFILENAME}")
 
-system.time({
+d1 <- Sys.time()
+print(d1)
 dtm <- grid_terrain(ctg, res=0.25, algorithm = kriging())
-})
+d2 <- Sys.time()
+d2-d1 # Time difference of 56.23551 secs
 
 opt_output_files(ctg) <- paste0("PROCESSED_DATA/SEL_NORM/{ORIGINALFILENAME}")
 ctgnorm <- lasnormalize(ctg, dtm)
-
-
-
 
 
 newctg = catalog_apply(ctg, normalize)
