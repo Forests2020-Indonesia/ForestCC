@@ -3,32 +3,42 @@ library(lidR)
 
 rm(list=ls())
 
-ctg <- catalog("PROCESSED_DATA/PREPROCESSED_FULL/")
+ctg <- catalog("PROCESSED_DATA/CTG_SINGLE/")
 
 # setting the process paramaters ----
 
 opt_chunk_buffer(ctg) <- 0
-opt_chunk_size(ctg)   <- 500
-opt_chunk_alignment(ctg) <- c(738965L, 9676285L) # WAJIB INTEGER !
-opt_cores(ctg) <- 2
-opt_output_files(ctg) <- paste0("PROCESSED_DATA/NORMALIZED_TILES/area_{ID}_normalized")
+opt_chunk_size(ctg)   <- 0
+opt_cores(ctg) <- 1
+
+opt_output_files(ctg) <- paste0("PROCESSED_DATA/SEL_NORM/{ORIGINALFILENAME}")
 
 # define function ----
-normalize <- function(chunk)
+mkDTM <- function(chunk)
 {
   las <- readLAS(chunk)
-  print(las)
-  if(is.empty(las) || nrow(las@data) < 100000) return(NULL)
+  if(is.empty(las)) return(NULL)
   
-  # lasnormalized
-  dtm <- grid_terrain(las, res=0.5, algorithm=kriging(k=10L))
+  lst <- strsplit(chunk@save, "/")
+  fdtm <- paste0(gsub(lst[[1]][2], "SEL_DTM", chunk@save), ".tif")
+
+  # dtm
+  dtm <- grid_terrain(las, res=0.25, algorithm=kriging(k=50L))
+  crs(dtm) <- CRS("+init=epsg:32748")
+  writeRaster(dtm, filename=fdtm, overwrite=TRUE)
   
+  # lasnormalize
   las <- lasnormalize(las, dtm)
-  
   return(las)
+  
 }
 
-newctg = catalog_apply(ctg, normalize)
+newctg = catalog_apply(ctg, mkDTM)
+
+opt_output_files(ctg) <- paste0("PROCESSED_DATA/SEL_DTM/{ORIGINALFILENAME}")
+
+
+
 fulctg <- catalog(unlist(newctg))
 fullas <- readLAS(fulctg)
 
