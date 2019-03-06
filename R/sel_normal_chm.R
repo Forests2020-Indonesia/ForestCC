@@ -22,6 +22,9 @@ mkDTM <- function(chunk)
   lst <- strsplit(chunk@save, "/")
   fdtm <- paste0(gsub(lst[[1]][2], "CTG_DTM", chunk@save), ".tif")
 
+  # remove outliers
+  
+  
   # dtm
   dtm <- grid_terrain(las, res=0.25, algorithm=kriging(k=10L), keep_lowest=TRUE) # 5- pts as an average of pts available in 9 grid of 1 m x 1m grid
   crs(dtm) <- CRS("+init=epsg:32748")
