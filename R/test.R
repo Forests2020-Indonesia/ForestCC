@@ -4,7 +4,7 @@ library(lidR)
 rm(list=ls())
 
 las <- 
-ctg <- catalog("PROCESSED_DATA/CTG_SINGLE/")
+ctg <- catalog("EXAMPLE_DATA/LINE_8_1.laz")
 
 # setting the process paramaters ----
 
@@ -15,10 +15,10 @@ opt_filter(ctg) <- "-drop_z_below 0"
 opt_output_files(ctg) <- paste0("PROCESSED_DATA/CTG_OUT/{ORIGINALFILENAME}")
 
 d1 <- Sys.time()
-print(d1)
 dtm <- grid_terrain(ctg, res=0.25, algorithm = kriging())
 d2 <- Sys.time()
 d2-d1 # Time difference of 56.23551 secs
+
 
 opt_output_files(ctg) <- paste0("PROCESSED_DATA/SEL_NORM/{ORIGINALFILENAME}")
 ctgnorm <- lasnormalize(ctg, dtm)
