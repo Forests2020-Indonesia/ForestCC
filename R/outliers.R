@@ -10,7 +10,7 @@ plot(w_out) # with outliers
 
 n_out <- readLAS("PROCESSED_DATA/TEST_LAS_INP/LN81SUB2.laz")
 plot(n_out) # no outliers
-
+nrow(n_out@data)
 
 # using simple treshold: SUCCESS !! ----
 # asumsinya: dari ketinggian minimum + 100 m tidak akan melebihi tinggi pepohonan
@@ -23,14 +23,15 @@ las_ftr <- lasfilter(w_out, Z <= (min(Z) + 100))
 plot(las_ftr)
 
 # second dataset
-las_out <- lasfilter(n_out, Z > (min(Z) + 100))
-nrow(las_ftr2@data)
-
+las_out2 <- lasfilter(n_out, Z <= (min(Z) + 100))
+plot(las_out2)
+nrow(las_out2@data)
 
 # using kmeans: SUCCESS !! ----
 # this algorithm is meant to remove abnormal high points above the forests
 # with slopy terrain 
 z <- kmeans(w_out@data$Z, 5)
+mdn <- median(z$centers)
 w_out@data$clust <- z$cluster
 las_out3 <- lasfilter(w_out, clust == which(z$centers == max(z$centers)))
 plot(las_out3)
