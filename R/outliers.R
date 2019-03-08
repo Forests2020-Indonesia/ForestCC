@@ -13,7 +13,8 @@ plot(n_out) # no outliers
 
 
 # using simple treshold: SUCCESS !! ----
-# asumsinya: dari ketinggian minimum + 100 tidak melebihi tinggi pepohonan
+# asumsinya: dari ketinggian minimum + 100 m tidak akan melebihi tinggi pepohonan
+# 
 # first dataset
 las_out <- lasfilter(w_out, Z > (min(Z) + 100))
 plot(las_out)
@@ -26,16 +27,24 @@ las_out <- lasfilter(n_out, Z > (min(Z) + 100))
 nrow(las_ftr2@data)
 
 
-# since trees will not reach 100 m
-# therefore, 
-# actually this technique is so simple that I was not aware of
-
-
 # using kmeans: SUCCESS !! ----
+# this algorithm is meant to remove abnormal high points above the forests
+# with slopy terrain 
 z <- kmeans(w_out@data$Z, 5)
 w_out@data$clust <- z$cluster
 las_out3 <- lasfilter(w_out, clust == which(z$centers == max(z$centers)))
 plot(las_out3)
+
+# problem dengan kmeans: tidak bisa digunakan untuk normal data
+# kecuali ada algorithm tambahan untuk mengisolasi/memfilter k-points dengan
+# center yang abnormal
+
+# third way: using ancillary coarser DTM for prior information
+# about the the average height over the place of the concerned dataset
+# then use the first algorithm above by replacing the min.value with DTM value 
+# (not implemented yet)
+
+
 
 # by using boxplot: NOT REPLICABLE ----
 # test with unremoved point clouds from (lidar) sensor platform
