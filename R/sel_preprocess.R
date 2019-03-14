@@ -1,7 +1,14 @@
+library(lidR)
+library(raster)
+library(dplyr)
+library(magrittr)
+
 # a copy from RMULiDAR project's code
 
 rm(list=ls())
 ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS/")
+
+# srtm90 <- brick("ANCILLARY/southsumatra-lampung-banten-srtm90m.tif")
 
 # setting the process paramaters ----
 
@@ -10,23 +17,55 @@ opt_chunk_size(ctg)   <- 0
 opt_cores(ctg) <- 6
 opt_output_files(ctg) <- "PROCESSED_DATA/SEL_PREPROCESS/{ORIGINALFILENAME}"
 
-# define function ----
 preprocess <- function(chunk)
+{
+  # read chunk ----
+  las <- readLAS(chunk)
+  if(is.empty(las)) 
+  {
+    print(chunk@files)
+    return(NULL)
+  }
+  # filter duplicates X, Y, Z  ----
+  las <- lasfilterduplicates(las)
+  
+  # filter duplicates X and Y ----
+  # it will retain only the first return
+  # to know behind this code line, check out lidR's R source at lascheck function 
+  # this issue: https://github.com/Jean-Romain/lidR/issues/39
+  las <- lasfilter(las, !duplicated(las@data, by=c("X", "Y")))
+  
+  # remove unclassified points and low points ----
+  las <- lasfilter(las, !(Classification == 0 | Classification == 7))
+
+}
+
+catalog_apply(ctg, preprocess)
+
+newctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS/")
+
+opt_chunk_buffer(newctg) <- 0
+opt_chunk_size(newctg)   <- 0 
+opt_cores(newctg) <- 4
+
+lasInCtgCheck <- function(chunk)
 {
   las <- readLAS(chunk)
   
-  if(is.empty(las)) return(NULL)
+  if(is.empty(las))
+    return(NULL)
   
-  # lasfilterduplicates
-  las <- lasfilterduplicates(las)
+  print(paste("-----------", chunk@files, "---------"))
+  print(summary(las@data$Z))
+  print(lascheck(las))
   
-  # drop Z less than zero
-  las <- lasfilter(las, Z >= 0)
 }
 
-newctg = catalog_apply(ctg, preprocess)
+catalog_apply(newctg, lasInCtgCheck)
 
+# maybe better to check after all processes done
 
+# next ----
 
 
 

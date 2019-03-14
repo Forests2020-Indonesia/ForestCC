@@ -1,5 +1,6 @@
 PROCESSED_DATA
 ANCILLARY
+INPUT_DATA
 .Rproj.user
 *.RData
 *.RDataTmp
@@ -9,3 +10,4 @@ PYTHON/test.py
 PYTHON/test2.py
 .httr-oauth
 .Rhistory
+Rplots.pdf
