@@ -41,7 +41,7 @@ normalize <- function(chunk)
   las <- lasfilter(las, Z >= 0, Z <= 100)
 }
 
-newctg = catalog_apply(ctg, normalize)
+catalog_apply(ctg, normalize)
 
 # check las after normalization
 
