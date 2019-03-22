@@ -33,3 +33,5 @@ pixqa[['cld_shadow']] %in% pixqa[['clr']]
 pixqa[['cld_shadow']] %in% pixqa[['wtr']] 
 pixqa[['cld']] %in% pixqa[['clr']] 
 pixqa[['cld']] %in% pixqa[['wtr']] 
+
+# END
