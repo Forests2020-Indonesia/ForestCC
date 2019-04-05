@@ -6,7 +6,7 @@ library(magrittr)
 # a copy from RMULiDAR project's code
 
 rm(list=ls())
-ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS/")
+ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS2/")
 
 # srtm90 <- brick("ANCILLARY/southsumatra-lampung-banten-srtm90m.tif")
 
@@ -15,7 +15,7 @@ ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS/")
 opt_chunk_buffer(ctg) <- 0
 opt_chunk_size(ctg)   <- 0 
 opt_cores(ctg) <- 6
-opt_output_files(ctg) <- "PROCESSED_DATA/SEL_PREPROCESS/{ORIGINALFILENAME}"
+opt_output_files(ctg) <- "PROCESSED_DATA/SEL_PREPROCESS2/{ORIGINALFILENAME}"
 
 preprocess <- function(chunk)
 {
@@ -42,11 +42,11 @@ preprocess <- function(chunk)
 
 catalog_apply(ctg, preprocess)
 
-newctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS/")
+newctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS2/")
 
 opt_chunk_buffer(newctg) <- 0
 opt_chunk_size(newctg)   <- 0 
-opt_cores(newctg) <- 4
+opt_cores(newctg) <- 1
 
 lasInCtgCheck <- function(chunk)
 {

@@ -5,7 +5,7 @@ library(rgdal)
 library (magrittr)
 library(velox)
 
-dirmetric <- "PROCESSED_DATA/SEL_METRICS/"
+dirmetric <- "PROCESSED_DATA/SEL_METRICS2/"
 dirthemes <- "/DATA/TOPO SUMSEL/"
 dirimages <- "PROCESSED_DATA/SEL_RASTER/"
 
@@ -23,7 +23,7 @@ lst_metrics <- lapply(shpmetrics,
 
 
 sel_metrics <- do.call(rbind, lst_metrics)
-names(sel_metrics)[4] <- "LC_Lidar"
+names(sel_metrics)[4] <- "LC_Lidar" #for the first round, the concerned attribute names "Tuplah"
 sel_metrics
 
 # embedding data from klhk
@@ -55,5 +55,5 @@ sp_sel_metrics <- as(sel_metrics, "Spatial")
 sel_extract <- raster::extract(stack_tif, sp_sel_metrics, df=TRUE)
 #binding (sp apprach)
 sel_metrics <- dplyr::bind_cols(sel_metrics, as.data.frame(sel_extract))
-st_write(sel_metrics, "PROCESSED_DATA/FINAL_SEL_METRICS/sel_metrics.shp")
+st_write(sel_metrics, "PROCESSED_DATA/FINAL_SEL_METRICS/sel_metrics2.shp")
 

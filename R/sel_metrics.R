@@ -6,10 +6,10 @@ library(magrittr)
 library(dplyr)
 
 
-ctg <- catalog("PROCESSED_DATA/SEL_NORM/")
+ctg <- catalog("PROCESSED_DATA/SEL_NORM2/")
 opt_chunk_buffer(ctg) <- 0
 opt_cores(ctg) <- 6
-opt_output_files(ctg) <- "PROCESSED_DATA/SEL_METRICS/{ORIGINALFILENAME}-metrics"
+opt_output_files(ctg) <- "PROCESSED_DATA/SEL_METRICS2/{ORIGINALFILENAME}-metrics"
 
 sel_metrics = function(z, htree, rn, nr, cls, ity)
 {
@@ -23,7 +23,7 @@ sel_metrics = function(z, htree, rn, nr, cls, ity)
   
   # FRCI = first return canopy index
   sr <- (nr == 1) # single return when only 1 beam and 1 return )
-  fr <- (rn == 1) & (nr > 1) # frist return from many return
+  fr <- (nr  > 1) & (rn == 1)  # frist return from many return
   
   # frci'a denominator
   fc <- fr & vg & (z >= htree) 
@@ -31,7 +31,8 @@ sel_metrics = function(z, htree, rn, nr, cls, ity)
   
   frci = (sum(sc) + sum(fc)) / (sum(sr) + sum(fr))
   
-  # mean intensity
+  # mean intensity from first return only
+  
   mean_ity <- mean(ity)
   
   # print(paste0("FRCI = ", frci))
@@ -109,9 +110,9 @@ calc_metrics <- function(chunk, resolution)
   
  #  selected image layers were processed by using different script
   sf_metrics <- embed_theme(sf_metrics, 
-                            themefolder = "/DATA/LIDAR GIZ/ORTHOPHOTO_CLASSIFICATION/",
+                            themefolder = "/DATA/LIDAR GIZ/ORTHOPHOTO_CLASSIFICATION2/",
                             thematic = paste0(tilename, ".shp"),
-                            sel_field = "Tuplah")
+                            sel_field = "LC_Lidar")
   
   #sf_whole <<- tryCatch(get("sf_whole"), error = function(cond) return(NULL))
   #sf_whole <- rbind(sf_whole, sf_metrics)
