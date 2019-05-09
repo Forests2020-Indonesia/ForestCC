@@ -60,7 +60,6 @@ Tb7V <- glcm(b7, statistics = "variance")
  
 # writeRaster(get("Tb4M"), filename = "PROCESSED_DATA/SEL_RASTER/Tb4M.tif", overwrite=TRUE) 
 
-
 RasterObj <- c("RasterLayer", "RasterStack", "RasterBrick")
 # save only *Raster objects
 show_raster_obj <- function(x)
@@ -87,7 +86,6 @@ save_all_raster_obj <- function(x)
 
 lst_raster_obj <- unlist(sapply(ls(), FUN = show_raster_obj), use.names = FALSE)
 sapply(lst_raster_obj, FUN = save_raster_obj)
-
 
 
 

@@ -3,14 +3,14 @@ library(lidR)
 
 rm(list=ls())
 
-ctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS2/")
+ctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS3/")
 
 # setting the process paramaters ----
 
 opt_chunk_buffer(ctg) <- 0
 opt_chunk_size(ctg)   <- 0
 opt_cores(ctg) <- 6
-opt_output_files(ctg) <- paste0("PROCESSED_DATA/SEL_NORM2/{ORIGINALFILENAME}")
+opt_output_files(ctg) <- paste0("PROCESSED_DATA/SEL_NORM3/{ORIGINALFILENAME}")
 
 # define function ----
 normalize <- function(chunk)
@@ -45,11 +45,13 @@ catalog_apply(ctg, normalize)
 
 # check las after normalization
 
-newctg <- catalog("PROCESSED_DATA/SEL_NORM2/")
+newctg <- catalog("PROCESSED_DATA/SEL_NORM3/")
 
 opt_chunk_buffer(newctg) <- 0
 opt_chunk_size(newctg)   <- 0 
-opt_cores(newctg) <- 4
+opt_cores(newctg) <- 1
+
+sink("PROCESSED_DATA/LOGS/03_lascheck_afternormalize.txt")
 
 lasInCtgCheck <- function(chunk)
 {
@@ -65,4 +67,4 @@ lasInCtgCheck <- function(chunk)
 }
 
 catalog_apply(newctg, lasInCtgCheck)
-
+sink("PROCESSED_DATA/LOGS/03_lascheck_afternormalize.txt", append = TRUE)

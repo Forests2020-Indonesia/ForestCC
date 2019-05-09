@@ -6,7 +6,7 @@ library(magrittr)
 # a copy from RMULiDAR project's code
 
 rm(list=ls())
-ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS2/")
+ctg <- catalog("/DATA/LIDAR GIZ/LAS (DSM)/PINDAHDATA/STAGE3/")
 
 # srtm90 <- brick("ANCILLARY/southsumatra-lampung-banten-srtm90m.tif")
 
@@ -15,7 +15,9 @@ ctg <- catalog("/DATA/LIDAR GIZ/SELECTEDLAS2/")
 opt_chunk_buffer(ctg) <- 0
 opt_chunk_size(ctg)   <- 0 
 opt_cores(ctg) <- 6
-opt_output_files(ctg) <- "PROCESSED_DATA/SEL_PREPROCESS2/{ORIGINALFILENAME}"
+opt_output_files(ctg) <- "PROCESSED_DATA/SEL_PREPROCESS3/{ORIGINALFILENAME}"
+
+sink("PROCESSED_DATA/LOGS/01_sel_preprocess3.txt")
 
 preprocess <- function(chunk)
 {
@@ -41,12 +43,15 @@ preprocess <- function(chunk)
 }
 
 catalog_apply(ctg, preprocess)
+sink("PROCESSED_DATA/LOGS/01_sel_preprocess3.txt", append=TRUE)
 
-newctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS2/")
+newctg <- catalog("PROCESSED_DATA/SEL_PREPROCESS3/")
 
 opt_chunk_buffer(newctg) <- 0
 opt_chunk_size(newctg)   <- 0 
 opt_cores(newctg) <- 1
+
+sink("PROCESSED_DATA/LOGS/02_lascheck.txt")
 
 lasInCtgCheck <- function(chunk)
 {
@@ -62,10 +67,10 @@ lasInCtgCheck <- function(chunk)
 }
 
 catalog_apply(newctg, lasInCtgCheck)
-
+sink("PROCESSED_DATA/LOGS/02_lascheck.txt", append = TRUE)
 # maybe better to check after all processes done
 
-# next ----
+
 
 
 

@@ -48,7 +48,7 @@ open_tifs <- function(fname)
 env_tif <- sapply(tif_fpath, FUN = open_tifs, USE.NAMES = FALSE) 
 ls_tif <- stack(sapply(env_tif, FUN = function(x) get(x)))
 stack_tif <- stack(ls_tif)
-# stack_vlx <- velox(stack_tif) # ca't work with multipoints sf
+
 
 # extract by sp
 sp_sel_metrics <- as(sel_metrics, "Spatial")
