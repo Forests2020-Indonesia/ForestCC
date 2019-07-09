@@ -21,4 +21,4 @@ saveRDS(colwise_bands, "PROCESSED_DATA/SEL_RASTER_COMBINED/colwise_bands_with_NA
 # svr can't handle NA, need to adjust dataset
 colwise_bands[is.na(colwise_bands)] <- -9999
 saveRDS(colwise_bands, "PROCESSED_DATA/SEL_RASTER_COMBINED/colwise_bands_wo_NA.tif")
-rm(list_vector)
+
