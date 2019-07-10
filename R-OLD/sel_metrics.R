@@ -5,7 +5,6 @@ library(rgdal)
 library(magrittr)
 library(dplyr)
 
-
 ctg <- catalog("PROCESSED_DATA/SEL_NORM2/")
 opt_chunk_buffer(ctg) <- 0
 opt_cores(ctg) <- 6
@@ -75,6 +74,7 @@ calc_pos <- function(chunk_name)
   
   return(pos)
 }
+
 embed_theme <- function(sf_metrics, themefolder, thematic = NULL, sel_field)
 {
   # images folder
@@ -89,10 +89,12 @@ embed_theme <- function(sf_metrics, themefolder, thematic = NULL, sel_field)
   sf_metrics <- st_join(sf_metrics, dplyr::select(sf_target, sel_field))
   return(sf_metrics)
 }
+
 calc_metrics <- function(chunk, resolution)
 {
   las <- readLAS(chunk)
   if(is.empty(las)) return(NULL)
+  
   
   coords <- calc_pos(chunk@files)
   
@@ -113,9 +115,6 @@ calc_metrics <- function(chunk, resolution)
                             themefolder = "/DATA/LIDAR GIZ/ORTHOPHOTO_CLASSIFICATION2/",
                             thematic = paste0(tilename, ".shp"),
                             sel_field = "LC_Lidar")
-  
-  #sf_whole <<- tryCatch(get("sf_whole"), error = function(cond) return(NULL))
-  #sf_whole <- rbind(sf_whole, sf_metrics)
   
   return(sf_metrics)
   
