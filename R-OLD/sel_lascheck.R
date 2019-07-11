@@ -30,7 +30,7 @@ chkLas = function(fname)
                  filter = "-drop_z_below 0")
   
   if(is.empty(las)) return(NULL)
-  writeLines("\n")
+  writeLines("\n")  
   
   cat(fname)
   # lascheck
