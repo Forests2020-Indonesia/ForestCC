@@ -105,6 +105,7 @@ mtr.nar <- grid_metrics(narrowsca,
                             sel_metrics(Z, htree=2.5, ReturnNumber, NumberOfReturns, Classification), 
                             res=resolution,
                             start=c(coords[1], coords[3]))
+projection(mtr.nar) <- CRS("+init=epsg:32748")
 names(mtr.nar) <- c("naARCI", "naFRCI")
 saveRDS(mtr.nar, "PROCESSED_DATA/LINE_2_82/CCindex_narrow_scanangle.rds")
 
@@ -112,6 +113,7 @@ mtr.ori <- grid_metrics(ndsm,
                         sel_metrics(Z, htree=2.5, ReturnNumber, NumberOfReturns, Classification), 
                         res=resolution,
                         start=c(coords[1], coords[3]))
+projection(mtr.ori) <- CRS("+init=epsg:32748")
 saveRDS(mtr.ori, "PROCESSED_DATA/LINE_2_82/CCindex_ori_scanangle.rds")
 
 # subtraction of narrow-scan-filtered FRCI and unfiltered FRCI 
@@ -133,6 +135,11 @@ writeOGR(mtr.sp, dsn = "PROCESSED_DATA/metric_scan_angle_effect.shp",
          layer = "metric_scan_angle_effect", 
          driver = "ESRI Shapefile",
          overwrite_layer = TRUE)
+
+# stacking all
+mtr.all <- stack(mtr.nar, mtr.ori)
+writeRaster(mtr.all, "PROCESSED_DATA/metric_scan_angle_effect_all_layers.tif",
+            overwrite = TRUE)
 
 # ARCI vs FRCI in shapefile format
 mtr.acci <- raster::extract(arci.frci, spgrd, sp = TRUE) 
@@ -163,7 +170,7 @@ ggplot(df.acci, aes(x=sortID)) + geom_line(aes(y = naFRCI, colour = "naFRCI")) +
   geom_line(aes(y = naARCI, colour = "naARCI")) + 
   #geom_point(aes(y=naFRCI)) + geom_point(aes(y=naARCI)) +
   scale_color_manual(values = c("red", "black")) + ylab("CC Index") + xlab("obs.index")
-
+dplyr::filter(df.acci, naFRCI == 1, sortID < 50)
 
 # check PCLs in a grid ----
 lasclipBufferPnt <- function(las, x, y, res)
@@ -205,7 +212,7 @@ fcl.grid01@data %>% st_as_sf(coords = c("X", "Y"), crs = 32748 ) %>%
 # grid 02: start=c(487350.0, 9767710.0)
 # do the work please
 
-# raster based CC index ----
+# calculate CHM (raster)- based CC index ----
 # by point to raster
 r_ndsm <- grid_canopy(ndsm, res = 0.5, 
                       p2r(subcircle = 0.2, na.fill = kriging() ))
@@ -224,18 +231,44 @@ plot(r_pfr, col = height.colors(40))
 # by pit2free algorithm v2
 r_pfr2 <- grid_canopy(ndsm, res = 0.5, 
                      pitfree(c(0,2,5,10,15,20), c(0, 1.5), subcircle = 0.2))
+projection(r_pfr2) <- CRS("+init=epsg:32748")
 saveRDS(r_pfr2, "PROCESSED_DATA/LINE_2_82/raster_chm_pit2free_disk.rds")
 writeRaster(r_pfr2, "PROCESSED_DATA/LINE_2_82/raster_chm_pit2free_disk.tif",
             overwrite = TRUE)
 plot(r_pfr2, col = height.colors(40))
 
-# zonal operations
+# extract by polygon
+
 r_pfr2[r_pfr2 < 2.5] <- NA
-mask.pfr <- mask(r_pfr2, mtr.ori)
+tile282 <- readOGR("/DATA/LIDAR GIZ/AOITILE/Tile_2_82_vgrid.shp")
+xtr_pfr2 <- raster::extract(r_pfr2, sel_grid, 
+                            fun = function(x, ...) { 
+                              notNA = !is.na(x)
+                              hGT2.5 = x > 2.5
+                              nvalid = sum(notNA & hGT2.5)
+                              CCidx  = nvalid / 3600 # 60 x 60 cells
+                              return(CCidx)}, 
+                              sp = TRUE)
 
+pts.mtr.all <- raster::extract(mtr.all, spgrd, sp = TRUE)
+xtr_pfr2.2 <- st_join(st_as_sf(pts.mtr.all), st_as_sf(xtr_pfr2)) # join operation much better with sf dan sp::over
+names(xtr_pfr2.2)
 
-plot(r_pfr2, col = height.colors(40))
+writeOGR(as(xtr_pfr2.2, "Spatial"), dsn = "PROCESSED_DATA/LINE_2_82/extract_numpix_by_poly_v2.shp",
+         layer = "extract_numpix_by_poly_v2", 
+         driver = "ESRI Shapefile",
+         overwrite_layer = TRUE)
 
-align.pfr <- alignExtent(mtr.ori, r_pfr2, snap = 'near')
-npcl <- zonal(crop.pfr, mtr.ori$ARCI, fun = 'sum', na.rm = TRUE )
-merge.pfr <- merge(r_pfr2, raster(align.pfr)
+# plotting
+xtr_pfr2.2 <- xtr_pfr2.2[order(xtr_pfr2.2$naARCI),]
+xtr_pfr2.2$sortID <- 1:nrow(xtr_pfr2.2)
+
+ggplot(xtr_pfr2.2, aes(x=sortID)) + 
+  geom_line(aes(y = naFRCI, colour = "naFRCI")) + 
+  geom_line(aes(y = naARCI, colour = "naARCI")) + 
+  geom_line(aes(y = Z, colour = "chmCCi")) +
+  #geom_point(aes(y=naFRCI)) + geom_point(aes(y=naARCI)) +
+  scale_color_manual(values = c("red", "black", "blue")) + 
+  ylab("CC Index") + xlab("obs.index")
+
+dplyr::filter(xtr_pfr2.2, Z < 0.52 & Z > 0.5, naFRCI > 0.55, sortID < 30)
