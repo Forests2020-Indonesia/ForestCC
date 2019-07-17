@@ -117,7 +117,6 @@ calc_metrics <- function(chunk, resolution)
                             sel_field = "LC_Lidar")
   
   return(sf_metrics)
-  
 }
 
 lst_metrics <- catalog_apply(ctg, FUN = function(x) calc_metrics(x, 30))
