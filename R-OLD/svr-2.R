@@ -16,7 +16,7 @@ rasterOptions(maxmemory = 1.5e+10)
 rasterOptions(chunksize = 1e+9)
 memory.size(TRUE)
 
-dataset_frci <- readRDS("PROCESSED_DATA/SET_SAMPLES/dataset_frci.RDS")
+dataset_frci <- readRDS("PROCESSED_DATA/OLDS/SET_SAMPLES/dataset_frci.RDS")
 
 frci.bands <- dataset_frci %>% dplyr::select(FRCI, b2, b3, b4, b5, b6, b7)
 
