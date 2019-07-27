@@ -121,12 +121,7 @@ calc_metrics <- function(chunk, resolution)
 
 lst_metrics <- catalog_apply(ctg, FUN = function(x) calc_metrics(x, 30))
 
-# embed_images <- function(sf_metrics)
-# {
-#   # images folder
-#   img_dir <- "/DATA/"
-#   
-# }
+
 
 
 
