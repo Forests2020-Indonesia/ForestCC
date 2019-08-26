@@ -22,12 +22,12 @@ library(lidR)
 library(dplyr)
 library(magrittr)
 
-chkLas = function(fname, lname)
+chkLas = function(fname, line_name)
 {
   splitName <- strsplit(fname, "/")
   shortFileName <- splitName[[1]][length(splitName[[1]])]
   
-  sinkFileName <- paste0(baseLogFolder, lname, "/",
+  sinkFileName <- paste0(baseLogFolder, line_name, "/",
                          gsub(".las", ".txt", shortFileName))
 
   if(file.exists(sinkFileName)) {
@@ -65,7 +65,7 @@ chkLas = function(fname, lname)
   closeAllConnections()
   
   # plot
-  plotFileName <- paste0(baseFigFolder, lname,  "/",
+  plotFileName <- paste0(baseFigFolder, line_name,  "/",
                          gsub(".las", ".jpg", shortFileName))       
   jpeg(plotFileName) # the output folder should be predetermined
   graphics::hist(las@data$Z, main=fname, breaks=15)
