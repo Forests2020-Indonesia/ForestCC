@@ -1,5 +1,6 @@
 # A Bayesian approach to obtaining uncertainty estimates from neural networks
 # https://blogs.rstudio.com/tensorflow/posts/2018-11-12-uncertainty_estimates_dropout/
+# modified by Wim Ikbal (2019)
 # Bagian I
 # Citation: Keydana (2018, Nov. 12). TensorFlow for R: You sure? A Bayesian approach to obtaining uncertainty estimates from neural networks. Retrieved from https://blogs.rstudio.com/tensorflow/posts/2018-11-12-uncertainty_estimates_dropout/
 
@@ -113,59 +114,6 @@ layer_concrete_dropout <- function(object,
     trainable = trainable
   ))
 }
-
-# initial values ----
-
-# sample size (training data)
-n_train <- 1000
-# sample size (validation data)
-n_val <- 1000
-# prior length-scale
-l <- 1e-4
-# initial value for weight regularizer 
-wd <- l^2/n_train
-# initial value for dropout regularizer
-dd <- 2/n_train
-
-# dropout model ----
-
-# we use one-dimensional input data here, but this isn't a necessity
-input_dim <- 1
-# this too could be > 1 if we wanted
-output_dim <- 1
-hidden_dim <- 1024
-
-input <- layer_input(shape = input_dim)
-
-output <- input %>% layer_concrete_dropout(
-  layer = layer_dense(units = hidden_dim, activation = "relu"),
-  weight_regularizer = wd,
-  dropout_regularizer = dd
-) %>% layer_concrete_dropout(
-  layer = layer_dense(units = hidden_dim, activation = "relu"),
-  weight_regularizer = wd,
-  dropout_regularizer = dd
-) %>% layer_concrete_dropout(
-  layer = layer_dense(units = hidden_dim, activation = "relu"),
-  weight_regularizer = wd,
-  dropout_regularizer = dd
-)
-
-mean <- output %>% layer_concrete_dropout(
-  layer = layer_dense(units = output_dim),
-  weight_regularizer = wd,
-  dropout_regularizer = dd
-)
-
-log_var <- output %>% layer_concrete_dropout(
-  layer_dense(units = output_dim),
-  weight_regularizer = wd,
-  dropout_regularizer = dd
-)
-
-output <- layer_concatenate(list(mean, log_var))
-
-model <- keras_model(input, output)
 
 # heterescedastic loss function ----
 
